@@ -121,6 +121,7 @@ export default {
       if (this.isLastQuestion) {
         this.$store.dispatch('completeSurvey')
         this.$store.commit('SET_COMPLETED', true)
+        this.$store.commit('SET_QUESTION', null)
         return
       }
       const i = this.question.questionorder + 1

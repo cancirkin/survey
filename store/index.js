@@ -127,7 +127,8 @@ export const actions = {
           headers
         }
       )
-    console.log(data);
+    commit('SET_SURVEY', data)
+
 
   },
 }
