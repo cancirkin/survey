@@ -2,7 +2,13 @@
   <div>
     <li>
       <label
-        class="step_1 position-relative bg-white shadow animate__animated animate__fadeInRight animate_200ms"
+        class="
+          step_1
+          position-relative
+          bg-white
+          shadow
+          animate__animated animate__fadeInRight animate_200ms
+        "
       >
         <div>
           <b-form-rating
@@ -22,10 +28,35 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
       value: 0,
+    }
+  },
+  watch: {
+    value(val) {
+      this.$store.dispatch('setAnswer', val)
+    },
+    // watch deep
+    question: {
+      handler(val) {
+        if (this.question.attendeeAnswer) {
+          this.value = Number(val.attendeeAnswer)
+        }
+      },
+      deep: true,
+    },
+  },
+  computed: {
+    ...mapGetters({
+      question: 'getQuestion',
+    }),
+  },
+  mounted() {
+    if (this.question.attendeeAnswer) {
+      this.value = Number(this.question.attendeeAnswer)
     }
   },
 }
