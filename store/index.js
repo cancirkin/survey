@@ -5,7 +5,8 @@ export const state = () => ({
   question: null,
   survey: {},
   isLastQuestion: false,
-  token: ''
+  token: '',
+  completed: false
 })
 
 export const getters = {
@@ -23,6 +24,9 @@ export const getters = {
   },
   getIsLastQuestion: (state) => {
     return state.isLastQuestion
+  },
+  getCompleted: (state) => {
+    return state.completed
   }
 }
 
@@ -41,23 +45,33 @@ export const mutations = {
   },
   SET_IS_LAST_QUESTION(state, isLastQuestion) {
     state.isLastQuestion = isLastQuestion
+  },
+  SET_COMPLETED(state, completed) {
+    state.completed = completed
   }
 }
 
 export const actions = {
   async fetchSurvey({ commit }) {
-    const { data } = await axios
-      .get(
-        'https://api.niso.dev/survey/getsurvey?c=981fb068-7aaf-4f37-9a88-a4debe1509c9&a=fb3a5e195f0727c99dc8db83f04c0a92b5081c1716fd8e9945bbec48bc8b71e1765bee28e2f22e0a46452e164c24175f'
-      )
+    const query = this.$router.currentRoute.query
+    if (!query.c) {
+      commit('SET_SURVEY', { isEmpty: true })
+    } else {
+      const { data } = await axios
+        .get(
+          `https://api.niso.dev/survey/getsurvey?c=${query?.c}&a=${query?.a}`
+        )
 
-    commit('SET_SURVEY', data)
+      commit('SET_SURVEY', data)
+    }
+
   },
   async startSurvey({ commit, dispatch }) {
+    const query = this.$router.currentRoute.query
     const { data } = await axios
       .post('https://api.niso.dev/survey/startsurvey', {
-        c: '981fb068-7aaf-4f37-9a88-a4debe1509c9',
-        a: 'fb3a5e195f0727c99dc8db83f04c0a92b5081c1716fd8e9945bbec48bc8b71e1765bee28e2f22e0a46452e164c24175f',
+        c: query?.c,
+        a: query?.a
       })
     commit('SET_TOKEN', data.token)
     dispatch('fetchQuestion', 1)

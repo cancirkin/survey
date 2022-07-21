@@ -11,7 +11,7 @@
     "
   >
     <!--Welcome Section-->
-    <div v-if="survey.success === 10" class="leadership">
+    <div v-if="survey.success === 10 && completed === false" class="leadership">
       <div class="name mb-3">
         <h1>{{ survey.surveyItems[0].surveyitemtitle }}</h1>
       </div>
@@ -36,6 +36,7 @@ export default {
   computed: {
     ...mapGetters({
       survey: 'getSurvey',
+      completed: 'getCompleted',
     }),
   },
 }

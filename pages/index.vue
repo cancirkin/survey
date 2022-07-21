@@ -37,6 +37,7 @@
     <!-- Circles which indicates the steps of the form: -->
     <div class="container">
       <!------------------------- Step-1 ----------------------------->
+      <empty-survey v-if="survey.isEmpty"></empty-survey>
       <welcome-card
         v-if="
           (survey.success === 10 ||
@@ -83,10 +84,20 @@ import Checkbox from '../components/Checkbox.vue'
 import Emoji from '../components/Emoji.vue'
 import WelcomeCard from '../components/WelcomeCard.vue'
 import QuestionCard from '../components/QuestionCard.vue'
+import EmptySurvey from '../components/EmptySurvey.vue'
 export default {
   name: 'IndexPage',
-  // eslint-disable-next-line vue/no-unused-components
-  components: { Radio, Checkbox, Emoji, WelcomeCard, QuestionCard },
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    Radio,
+    // eslint-disable-next-line vue/no-unused-components
+    Checkbox,
+    // eslint-disable-next-line vue/no-unused-components
+    Emoji,
+    WelcomeCard,
+    QuestionCard,
+    EmptySurvey,
+  },
   async asyncData({ store }) {
     await store.dispatch('fetchSurvey')
   },
@@ -109,14 +120,14 @@ export default {
     nextQuestion() {
       if (this.isLastQuestion) {
         this.$store.dispatch('completeSurvey')
-        this.$store.commit('SET_QUESTION', null)
+        this.$store.commit('SET_COMPLETED', true)
         return
       }
       const i = this.question.questionorder + 1
       this.$store.dispatch('fetchQuestion', i)
     },
     lastQuestion() {
-      if (this.question.questionOrder === 1) {
+      if (this.question.questionorder === 1) {
         return
       }
       const i = this.question.questionorder - 1
