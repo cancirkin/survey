@@ -38,10 +38,15 @@
     <div class="container">
       <!------------------------- Step-1 ----------------------------->
       <welcome-card
-        v-if="(survey.success === 10 || survey.success === 400) && !question"
+        v-if="
+          (survey.success === 10 ||
+            survey.success === 400 ||
+            survey.success === 100) &&
+          !question
+        "
       ></welcome-card>
       <question-card v-else></question-card>
-      <div v-if="survey.success === 10" class="row mt-5">
+      <div v-if="survey.success === 10 && !question" class="row mt-5">
         <button
           type="button"
           class="f_btn start-btn next_btn text-white text-uppercase mt-2"
@@ -104,6 +109,7 @@ export default {
     nextQuestion() {
       if (this.isLastQuestion) {
         this.$store.dispatch('completeSurvey')
+        this.$store.commit('SET_QUESTION', null)
         return
       }
       const i = this.question.questionorder + 1
